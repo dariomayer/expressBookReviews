@@ -1,4 +1,5 @@
 const express = require('express');
+const axios = require('axios');
 let books = require("./booksdb.js");
 let isValid = require("./auth_users.js").isValid;
 let users = require("./auth_users.js").users;
@@ -24,6 +25,18 @@ public_users.post("/register", (req,res) => {
 public_users.get('/',function (req, res) {
     res.send(JSON.stringify(books,null,4)); 
 });
+
+// Get the book list using async-await
+public_users.get('/all', async function (req, res) {
+    try {
+        const bookList = books;
+        res.send(JSON.stringify(bookList, null, 4));
+    } catch (error) {
+        console.error('Errore durante il recupero dell\'elenco dei libri:', error);
+        res.status(500).json({ message: 'Errore durante il recupero dell\'elenco dei libri' });
+    }
+});
+
 
 // Get book details based on ISBN
 public_users.get('/isbn/:isbn', function (req, res) {
